@@ -17,20 +17,23 @@ def deletefile(filetype):
         if f.endswith(filetype):
             send2trash(f)       # Replace with os.remove(f) to use built in libraries but lose undo-ability
             print('\nDeleted', f)
-    print('\nSuccessfully del-ed everything with the type .', filetype)
+    print('\nSuccessfully del-ed everything', end="")
+    if not filetype=='':
+        print(' with type .'+filetype)
 
 try:
     act=argv[1]
 except:
-    help()
     if input('\nRun in the directory: '+os.getcwd()+'? y/n\n').lower() == 'y':
+        act=os.getcwd()
         pass
     else:
-        print('Please specify a directory when running the script or run "-h"...\n')
-        quit()
+        act=input('Please specify a directory...\n')
 if act in ('-h','h','-H','H'):
     help()
     quit()
+if act.startswith("'"):
+    act=act[1:-1]
 try:
     os.chdir(act)
 except:
