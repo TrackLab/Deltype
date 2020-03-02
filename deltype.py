@@ -1,26 +1,49 @@
 # Author - TrackLab https://github.com/TrackLab
+# Contributor - SarenDev https://github.com/SarenDev
 # Requirements - When using the delfiletype.exe, None.
 #                When using this source code, send2trash                
 
-from os import listdir, remove
+import os
+from sys import argv
 from send2trash import send2trash
 
-def deletefile(filetype=None):
-    for f in listdir():
+def help():
+    print('\n\nDeltype - A simple and easy to use program to delete all files with a specific filetype inside a directory\n')
+    print('Usage: deltype(.py/.exe) [directory, -h]\n')
+    print('-h: simply prints this help menu\n')
+
+def deletefile(filetype):
+    for f in os.listdir():
         if f.endswith(filetype):
-            send2trash(f)       # replace with remove(f) to use python based libraries only
-            print('Deleted', f)
-    print('Successfully deleted all files with the filetype', filetype)
-    
+            send2trash(f)       # Replace with os.remove(f) to use built in libraries but lose undo-ability
+            print('\nDeleted', f)
+    print('\nSuccessfully del-ed everything', end="")
+    if not filetype=='':
+        print(' with type .'+filetype)
+
 try:
-    filetype = input('What filetype should be deleted? ').lower()
-    if filetype.startswith('.'):
-        filetype = filetype[1:].lower()
-    if filetype == 'py':
-        inp = input('That will also delete this script file. Are you sure? y/n \n').lower()
-        if inp == 'y':
-            deletefile(filetype)
-    else:
-        deletefile(filetype)
+    act=argv[1]
 except:
-    raise ValueError('No filetype to delete has been provided.')
+    if input('\nRun in the directory: '+os.getcwd()+'? y/n\n').lower() == 'y':
+        act=os.getcwd()
+        pass
+    else:
+        act=input('Please specify a directory...\n')
+if act in ('-h','h','-H','H'):
+    help()
+    quit()
+if act.startswith("'"):
+    act=act[1:-1]
+try:
+    os.chdir(act)
+except:
+    print('The directory',act,'does not exist\n')
+    quit()
+filetype = input('\nWhat filetype should be deleted?\n').lower()
+if filetype == '':
+    if input('\nA blank filetype will WIPE YOUR DIRECTORY! Are you sure you want to continue? y/n\n').lower() == 'y':
+        deletefile(filetype)
+    quit()
+if filetype.startswith('.'):
+    filetype = filetype[1:].lower()
+deletefile(filetype)
