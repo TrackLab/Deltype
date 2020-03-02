@@ -1,5 +1,6 @@
 # Deltype
 ## A simple and easy to use program to delete all files with a specific filetype inside a directory
+### Usage: deltype(.py/.exe) [directory, -h]
 
 Author - TrackLab
 
